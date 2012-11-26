@@ -1,8 +1,20 @@
+/*summary of what inode does
+*
+*/
 #include "inode.h"
 
+/*write_inode		converts indoes into cstrings
+*
+*@param i			inode to be converted
+*@param name_length	integer length of the inode's name
+*@param *result		char pointer to allocated space in memory equal to 4+name length
+*
+*The result of write_inode place the inodes index, size, type and name length into the first 4 blocks of allocated
+*memory and stores the name in the remaining blocks
+*/
 char* write_inode(inode i){//reliably converts inodes into cstrings
 	int name_length = strlen(i.name);
-	char* result = malloc((4+name_length)* sizeof(char));
+	char* result = malloc((4+name_length)* sizeof(char);
 	result[0] = i.index;
 	result[1] = i.size;
 	result[2] = i.type;
@@ -12,6 +24,15 @@ char* write_inode(inode i){//reliably converts inodes into cstrings
 		result[4+j] = i.name[j];
 	return result;}
 	
+/**read_inode		converts cstrings into inodes
+ *
+ *@param s			char pointer
+ *@param i			inode to be read
+ *@param name_length	integer stores length of the inode name, casts the char array's 4th value to int
+ *
+ *The result of read_inode retrieves the index, size, type and name of the char array 'inode' and converts it into an 
+ *inode
+ **/	
 inode read_inode(char* s){//reliably converts cstrings into inodes
 	inode i;
 	i.index = s[0];
@@ -24,6 +45,16 @@ inode read_inode(char* s){//reliably converts cstrings into inodes
 		i.name[j] = s[4+j];
 	return i;}
 
+/*write_itable stores indoes in blocks of allocated memory? -is that right????????
+*
+*@param result		char pointer to allocated memory, size determined by size_alloc value
+*@param *t			pointer to inode in memory
+*@param t_size		integer value of inode's
+*@param size_alloc
+*@param r_i		
+*@param buffer
+*
+*/
 int write_itable(char* result, inode* t, int t_size, int size_alloc){
 	result = malloc(sizeof(char)*size_alloc);
 	int r_i = 0;
@@ -39,7 +70,8 @@ int write_itable(char* result, inode* t, int t_size, int size_alloc){
 		free(buffer);}
 	result = realloc( result, sizeof(inode)*(r_i+1));
 	return r_i;}
-
+	
+/**/
 int read_itable(char* s, inode* t){
 	free(t);
 	int s_size = strlen(s);
