@@ -1,5 +1,11 @@
 #include "superblock.h"
+/**
+*int init_superblock	initializes superblock 
+*int put_superblock	writes the superblock to the disk
+*int get_superblock	retrieves superblock from disk
+**/
 
+//initializing of superblock, run on reformat
 int init_superblock(){
 	super.blockSize = 128;
 	super.blockCount= 512;
@@ -13,6 +19,13 @@ int init_superblock(){
 	super.root.name = "root";
 	return put_superblock();}
 
+/**
+*@param *buffer		char pointer for allocated memory of 128 bits	
+*@param ret				integer, write integer fields to buffer
+*@param *root_buffer	char pointer, converts inode to cstring
+*
+*put_superblock function writes the superblock to the disk
+**/
 int put_superblock(){
 	char* buffer = malloc(128 * sizeof(char));
 	int ret;
@@ -32,6 +45,13 @@ int put_superblock(){
 	if(ret<0) return ret;
 	return 0;}
 
+/**
+*@param *buffer	
+*@param i
+*@param ret
+*
+*get_superblock function retrieves superblock info from disk
+**/
 int get_superblock() {
 	char* buffer = malloc(128 * sizeof(char));
 	int i= 0;
