@@ -47,7 +47,7 @@ working: \
 		assets/globals.o \
 		assets/inode.o \
 		assets/parsing.o \
-		assets/superblock.o
+		assets/superblock.o 
 
 clean-extras:
 	rm -f tests/sfstest
@@ -80,10 +80,12 @@ assets/free_block_table.o: assets/free_block_table.c \
 	gcc -c assets/free_block_table.c -o assets/free_block_table.o
 	
 assets/get_size.o: assets/get_size.c \
+		assets/inode.h \
 		assets.h
 	gcc -c assets/get_size.c -o assets/get_size.o
 	
 assets/get_type.o: assets/get_type.c \
+		assets/inode.h \
 		assets.h
 	gcc -c assets/get_type.c -o assets/get_type.o
 	
