@@ -81,13 +81,11 @@ assets/free_block_table.o: assets/free_block_table.c \
 	
 assets/get_size.o: assets/get_size.c \
 		assets/inode.h \
-		assets/parsing.h \
 		assets.h
 	gcc -c assets/get_size.c -o assets/get_size.o
 	
 assets/get_type.o: assets/get_type.c \
 		assets/inode.h \
-		assets/parsing.h \
 		assets.h
 	gcc -c assets/get_type.c -o assets/get_type.o
 	
@@ -104,6 +102,7 @@ assets/inode.o: assets/inode.c assets/inode.h \
 	gcc -c assets/inode.c -o assets/inode.o
 	
 assets/open_file.o: assets/open_file.c \
+		assets/inode.h \
 		assets.h
 	gcc -c assets/open_file.c -o assets/open_file.o
 	
