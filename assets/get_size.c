@@ -3,10 +3,10 @@
 
 int sfs_getsize(char *pathname){
 	inode* result;
-	inode test;
+	inode hold;
 	int ret = parse(pathname,result);
 	if (ret >= 0){
-		test = *result;
-		return test.size;}
+		hold = *result;
+		return hold.size;}
 	else
 		return -1;}
