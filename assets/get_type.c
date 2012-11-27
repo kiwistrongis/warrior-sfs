@@ -1,4 +1,5 @@
 #include "inode.h"
+#include "parsing.c"
 #include "../assets.h"
 
 int sfs_gettype(char *pathname){
