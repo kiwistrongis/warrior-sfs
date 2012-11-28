@@ -4,7 +4,7 @@
 int sfs_gettype(char *pathname){
 	inode* result;
 	int ret = parse(pathname,result);
-	if (ret >= 0){
-		return (*result).type;}
+	if (ret<0)
+		return ret;
 	else
-		return -1;}
+		return (*result).type;}

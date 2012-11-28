@@ -41,6 +41,12 @@ tests-minor: \
 		tests/sbtest.out \
 		tests/shift.out
 
+incomplete: \
+		assets/close_file.o \
+		assets/delete_file.o \
+		assets/get_size.o \
+		assets/get_type.o \
+
 working: \
 		assets/blockio.o \
 		assets/free_block_table.o \
