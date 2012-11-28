@@ -10,12 +10,13 @@
 
 typedef struct{
 	int index;//index of file's first block on disk
-	int size;//size in blocks
+	int size;//size in bytes
 	int type;//0 if directory, 1 otherwise
 	char* name;//name of file
 } inode;
 
+int size_in_blocks(inode i);
 char* write_inode(inode i);
 inode read_inode(char* s);
-int write_itable(char* result, inode* t, int t_size, int size_alloc);
+int write_itable(char* result, inode* t, int result_size_alloc);
 int read_itable(char* s, inode* t);
