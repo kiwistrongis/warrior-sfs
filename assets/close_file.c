@@ -10,8 +10,7 @@
 *otherwise, the file isn't open and returns true, that it's closed, to system.
 */
 int sfs_close(int fd){
-	if(open_i_block[fd].valid){
-		open_i_block[fd].valid=0;
+	if(set_closed(fd) >= 0)
 		return 1;
-	}else{
-	return 1;}
+	else
+		return -1;}
