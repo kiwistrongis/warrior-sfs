@@ -25,6 +25,7 @@ char* write_inode(inode i){//reliably converts inodes into cstrings
 	int j;
 	for(j = 0; j<name_length; j++)
 		result[8+j] = i.name[j];
+	*(result+8+j) = '\0';
 	return result;}
 	
 /**
@@ -74,6 +75,7 @@ int write_itable(char* result, inode* t, int t_size, int size_alloc){
 		for(k = 0; buffer[k]!='\0'; k++)
 			result[r_i++] = buffer[k];
 		free(buffer);}
+	buffer = calloc
 	result = realloc( result, sizeof(inode)*(r_i+1));
 	return r_i;}
 	
@@ -89,6 +91,7 @@ int write_itable(char* result, inode* t, int t_size, int size_alloc){
 *@param next_size	integer value of next element
 *
 *int read_itable function frees up memory for inode t, t then allocates memory for minimal possible number of elements. While s_left is greater than 4, it checks to see if s_left is less than the next_size and breaks, otherwise, if the element index is greater or equal to next_size, t reallocates memory and increases its index, sending s_p to the read_inode function.
+* alternatively
 **/
 int read_itable(char* s, inode* t){
 	free(t);
@@ -98,12 +101,11 @@ int read_itable(char* s, inode* t){
 	int t_size = s_size/10;
 	t = malloc(sizeof(inode)*t_size);
 	int t_i = 0;
-	while ((s_left = s_size-s_i) > 4){
-		char* s_p = &(s[s_i]);
-		int next_size = 4 + s[3];
-		if(s_left < next_size)
-			break;
+	while ((s_left = s_size-s_i) > 8){//we may have more
+		inode new = read_inode(s+s_i);
+		int new_size = 8 + srtlen(new.name);
 		if(t_i >= t_size){
+				//if theres not enough space in t, make it bigger
 			s_left = s_size - s_i;
 			t = realloc( t, sizeof(inode)*(t_size + (s_left/10) + 1));}
 		t[t_i++] = read_inode(s_p);

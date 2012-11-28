@@ -19,10 +19,10 @@ int parse_it(char* s, inode* dest, inode i){
 	char* rem = strchr(s,'/');
 	if(rem==NULL);//we are on last token
 		//find token in i's itable
-	int token_length = rem-s;
+	int token_length = rem - s;
 	if(token_length=0)//empty token
 		return -1;
-	else if(token_length>5)//overweight token
+	else if(token_length > 5)//overweight token
 		return -1;
 	else {
 		char* block = malloc(sizeof(char)*128);
@@ -31,9 +31,18 @@ int parse_it(char* s, inode* dest, inode i){
 			free(block);
 			return ret;}
 		char* itable_buffer = malloc(sizeof(char)*i.size);
-		strncpy(itable_buffer,block,i.size);
-		*(itable_buffer+i.size) = '\0';
-		inode* itable; 
+		strncpy( itable_buffer, block, i.size);
+		*(itable_buffer + i.size) = '\0';
+		inode* itable;
 		
 		int rem_length = strlen(rem);
 		if(rem_length>1)
+		
+		
+		
+		
+		
+		
+		
+		
+		
