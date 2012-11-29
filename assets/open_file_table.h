@@ -3,4 +3,4 @@
 #include "../assets.h"
 
 int set_open(inode i);
-int set_closed(indoe i);
+int set_closed(int fd);

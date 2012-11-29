@@ -1,5 +1,10 @@
-#include "blockio.h"
+#include "inode.h"
 #include "../assets.h"
 
 int sfs_gettype(char *pathname){
-	return 1;}
+	inode* result;
+	int ret = parse(pathname,result);
+	if (ret<0)
+		return ret;
+	else
+		return (*result).type;}
