@@ -42,18 +42,26 @@ tests-minor: \
 		tests/sbtest.out \
 		tests/shift.out
 
+dead: \
+		assets/create_file.o \
+		assets/initialize.o \
+		assets/open_file.o \
+		assets/read_dir.o \
+		assets/read_file.o \
+		assets/write_file.o
+
 incomplete: \
 		assets/close_file.o \
 		assets/delete_file.o \
 		assets/get_size.o \
-		assets/get_type.o \
-		assets/parsing.o
+		assets/get_type.o
 
 working: \
 		assets/blockio.o \
 		assets/free_block_table.o \
 		assets/globals.o \
 		assets/inode.o \
+		assets/parsing.o \
 		assets/superblock.o 
 
 clean-extras:
