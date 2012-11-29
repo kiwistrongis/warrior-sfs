@@ -46,13 +46,13 @@ incomplete: \
 		assets/delete_file.o \
 		assets/get_size.o \
 		assets/get_type.o \
+		assets/parsing.o
 
 working: \
 		assets/blockio.o \
 		assets/free_block_table.o \
 		assets/globals.o \
 		assets/inode.o \
-		assets/parsing.o \
 		assets/superblock.o 
 
 clean-extras:
