@@ -19,4 +19,4 @@ int size_in_blocks(inode i);
 char* write_inode(inode i);
 inode read_inode(char* s);
 int write_itable(char* result, inode* t, int result_size_alloc);
-int read_itable(char* s, inode* t);
+int read_itable(char* s, inode** t, int s_size);
