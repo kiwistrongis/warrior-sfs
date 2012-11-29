@@ -1,4 +1,4 @@
-#include "parsing.h"
+#include "../assets.h"
 
 int parse(char* s, inode* dest){
 	int length = strlen(s);

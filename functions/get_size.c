@@ -1,5 +1,4 @@
-#include "inode.h"
-#include "../assets.h"
+#include "../warrior-sfs-lib.h"
 
 int sfs_getsize(char *pathname){
 	inode* result;

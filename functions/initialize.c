@@ -1,6 +1,4 @@
-#include "blockio.h"
-#include "superblock.h"
-#include "../assets.h"
+#include "../warrior-sfs-lib.h"
 
 int sfs_initialize(int erase){
 		int i;

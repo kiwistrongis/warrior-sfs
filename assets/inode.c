@@ -1,3 +1,5 @@
+#include "../assets.h"
+
 /*inode reads and writes inodes and itables
 *
 *char* write_inode	converts inodes into cstrings
@@ -5,8 +7,6 @@
 *int write_itable		...
 *int read_itable		...
 */
-#include "inode.h"
-
 
 int size_in_blocks(inode i){
 	return i.size/128 + 1;}
@@ -112,12 +112,10 @@ int read_itable(char* s, inode** t, int s_size){
 	int t_size = s_size/14 + 1;
 	*t = realloc(*t, sizeof(inode) * t_size);
 	int t_i = 0;
-	printf("%d\n",t);
 	while((s_left = s_size - s_i) > 8){ //we can read name length from s
 		int new_name_length;
 		get_bytes(s + s_i + 6, (int*) &new_name_length);
 		int new_size = new_name_length + 8;
-		printf("%d %d\n", s_i, new_size);
 		if(s_left < new_size){ //s is incorrectly formatted
 			int k;
 			for( k=0; k<t_i; k++)
@@ -129,7 +127,6 @@ int read_itable(char* s, inode** t, int s_size){
 			*t = realloc(*t, sizeof(inode) * t_size);}
 		(*t)[t_i++] = read_inode(s + s_i);
 		s_i += new_size;
-		printf("%d %d\n", s_i, new_size);
 		if(new_name_length <= 0){ //we have reached the terminator inode
 			*t = realloc( *t, sizeof(inode) * t_i);
 			return t_i - 1;}}}

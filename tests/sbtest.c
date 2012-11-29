@@ -1,6 +1,4 @@
 #include "../assets.h"
-#include "../assets/superblock.h"
-#include <stdio.h>
 int main(){
 	
 	int ret;

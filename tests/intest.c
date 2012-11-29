@@ -1,6 +1,4 @@
 #include "../assets.h"
-#include "../assets/inode.h"
-#include <stdio.h>
 int main(){
 	inode i ={
 		.index = 3,

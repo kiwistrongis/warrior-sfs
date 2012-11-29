@@ -1,5 +1,4 @@
-#include "blockio.h"
-#include "../assets.h"
+#include "../warrior-sfs-lib.h"
 
 int sfs_write(int fd, int start, int length, char *mem_pointer){
     char temp_blk[128];

@@ -1,3 +1,4 @@
+#include "../assets.h"
 /**
 *free_block_table does some stuff to some other stuff.
 *int set_free	sets block indexed by block_num to free
@@ -6,7 +7,6 @@
 *int balloc
 *int bfree
 **/
-#include "free_block_table.h"
 
 
 /**

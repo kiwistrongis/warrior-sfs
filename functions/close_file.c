@@ -1,6 +1,4 @@
-#include "blockio.h"
-#include "open_file_table.h"
-#include "../assets.h"
+#include "../warrior-sfs-lib.h"
 
 /*
 *@param	int fd			passes the close function the file descriptor number

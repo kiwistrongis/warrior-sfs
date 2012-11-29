@@ -1,6 +1,4 @@
-#include "blockio.h"
-#include "inode.h"
-#include "../assets.h"
+#include "../warrior-sfs-lib.h"
 
 int sfs_delete(char *pathname){
 	inode* result;

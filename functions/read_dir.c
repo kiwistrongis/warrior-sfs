@@ -1,5 +1,4 @@
-#include "blockio.h"
-#include "../assets.h"
+#include "../warrior-sfs-lib.h"
 
 int sfs_readdir(int fd, char *mem_pointer){
 	int i;
