@@ -11,13 +11,13 @@ main(){
 	char* c = write_inode(i);
 	printf("%s",c);
 	
-	inode i ={
+	inode j ={
 		.index = 0,
 		.size = 0,
 		.type = 0};
-	i.name = malloc(4*sizeof(char));
-	i.name = "\0\0\0\0";
-	i = read_inode(c);
+	j.name = malloc(4*sizeof(char));
+	j.name = "\0\0\0\0";
+	j = read_inode(c);
 	printf("%d %d %d %s\n",
-		i.index, i.size, i.type, i.name);
+		j.index, j.size, j.type, j.name);
 }

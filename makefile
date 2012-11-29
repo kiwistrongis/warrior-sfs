@@ -38,6 +38,7 @@ tests: tests/sfstest
 tests-minor: \
 		tests/casting.out\
 		tests/intest.out \
+		tests/ittest.out \
 		tests/sbtest.out \
 		tests/shift.out
 
@@ -46,13 +47,13 @@ incomplete: \
 		assets/delete_file.o \
 		assets/get_size.o \
 		assets/get_type.o \
+		assets/parsing.o
 
 working: \
 		assets/blockio.o \
 		assets/free_block_table.o \
 		assets/globals.o \
 		assets/inode.o \
-		assets/parsing.o \
 		assets/superblock.o 
 
 clean-extras:
@@ -197,6 +198,18 @@ tests/intest.out: tests/intest.o \
 		assets/globals.o \
 		assets/inode.o
 
+tests/ittest.o: tests/ittest.c \
+		assets.h \
+		assets/inode.h
+	gcc -c tests/ittest.c -o tests/ittest.o
+
+tests/ittest.out: tests/ittest.o \
+		assets/globals.o \
+		assets/inode.o
+	gcc -o tests/ittest.out tests/ittest.o \
+		assets/globals.o \
+		assets/inode.o
+
 #codefiles
 codefiles: codefiles-assets codefiles-locals codefiles-tests
 
@@ -227,6 +240,7 @@ codefiles-locals: \
 codefiles-tests: \
 		tests/casting.c \
 		tests/intest.c \
+		tests/ittest.c \
 		tests/sbtest.c \
 		tests/sfstest.c \
 		tests/shift.c
