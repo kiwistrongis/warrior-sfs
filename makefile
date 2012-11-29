@@ -1,11 +1,12 @@
 #universals
 default: all
-clean: tool/cleandir.sh \
+clean: tool/cleandir \
 		clean-extras
-	tool/cleandir.sh
-	tool/cleandir.sh assets
-	tool/cleandir.sh functions
-	tool/cleandir.sh tests
+	tool/cleandir
+	tool/cleandir assets
+	tool/cleandir functions
+	tool/cleandir tests
+	tool/cleandir tool
 	rm -f -r documentation
 check: all clean
 freshen: clean all
