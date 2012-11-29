@@ -9,6 +9,9 @@ int sfs_open(char *pathname){
 	inode* result;
 	int ret = parse(pathname, result);
 	if (ret >= 0)
-		return set_open(result);
+		char * block = malloc(sizeof(char)*128)
+		block = get_block(super.openFileTable_loc);
+		read_itable(block, (inode**)&result, sizeof(block));
+		
 	else	
 		return -1;}
