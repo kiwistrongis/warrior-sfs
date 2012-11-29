@@ -11,7 +11,7 @@ int sfs_open(char *pathname){
 	if (ret >= 0)
 		char * block = malloc(sizeof(char)*128)
 		block = get_block(super.openFileTable_loc);
-		read_itable(block, (inode**)&result, sizeof(block));
+		int t_size = read_itable(block, (inode**)&result, 128*sizeof(char));
 		
 	else	
 		return -1;}
