@@ -177,4 +177,5 @@ main(){
 		/* cleanup the newline that remains after reading command parameter(s) */
 		gets(command_buffer);
 	}
+	return 0;
 }

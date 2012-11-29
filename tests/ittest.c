@@ -1,7 +1,7 @@
 #include "../assets.h"
 #include "../assets/inode.h"
 #include <stdio.h>
-main(){
+int main(){
 	inode* t = malloc(sizeof(inode)*3);
 	//a
 	t[0].index = 3;
@@ -31,4 +31,5 @@ main(){
 	for(k = 0; k < 3; k++)
 		printf("%d %d %d %s\n",
 			t[k].index, t[k].size, t[k].type, t[k].name);
+	return 0;
 }

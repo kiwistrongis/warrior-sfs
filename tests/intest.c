@@ -1,7 +1,7 @@
 #include "../assets.h"
 #include "../assets/inode.h"
 #include <stdio.h>
-main(){
+int main(){
 	inode i ={
 		.index = 3,
 		.size = 1,
@@ -20,4 +20,5 @@ main(){
 	j = read_inode(c);
 	printf("%d %d %d %s\n",
 		j.index, j.size, j.type, j.name);
+	return 0;
 }
