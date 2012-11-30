@@ -69,9 +69,6 @@ dead: \
 incomplete: \
 		functions/close_file.o \
 		functions/delete_file.o \
-		functions/get_size.o \
-		functions/get_type.o \
-		functions/initialize.o \
 
 working: \
 		assets/blockio.o \
@@ -80,6 +77,9 @@ working: \
 		assets/parsing.o \
 		assets/superblock.o \
 		assets/utility.o \
+		functions/get_size.o \
+		functions/get_type.o \
+		functions/initialize.o \
 
 #locals
 warrior-sfs: warrior-sfs.o \
@@ -94,14 +94,17 @@ warrior-sfs.o: warrior-sfs.c \
 
 warrior-sfs-lib.a: \
 		assets.h \
+		assets \
 		working
 	ar rc warrior-sfs-lib.a \
 		assets/blockio.o \
 		assets/free_block_table.o \
-		assets/utility.o \
 		assets/inode.o \
 		assets/parsing.o \
-		assets/superblock.o
+		assets/superblock.o \
+		assets/utility.o \
+		functions/get_size.o \
+		functions/get_type.o
 	ranlib warrior-sfs-lib.a
 
 #assets
