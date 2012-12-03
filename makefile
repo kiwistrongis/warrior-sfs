@@ -61,8 +61,6 @@ test-all: test-minor test
 #in progress
 dead: \
 		functions/create_file.o \
-		functions/open_file.o \
-		functions/read_dir.o \
 		functions/read_file.o \
 		functions/write_file.o \
 
@@ -80,6 +78,8 @@ working: \
 		functions/get_size.o \
 		functions/get_type.o \
 		functions/initialize.o \
+		functions/open_file.o \
+		functions/read_dir.o \
 
 #locals
 warrior-sfs: warrior-sfs.o \

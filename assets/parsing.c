@@ -33,27 +33,29 @@ int parse_it(char* s, inode* dest, inode parent){
 		if (ret<0){
 			free(block);
 			return ret;}
-		inode* itable;
-		ret = read_itable( block, (inode**)&itable,128);
-		inode* looking = itable;
+		inode** itable;
+		ret = read_itable( block, itable,128);
+		inode* looking = *itable;
 		while (strlen((*looking).name)>0){
 			if(strcmp((*looking).name,token)==0)//we found it!
 				if(strlen(rem)>1){ //we have have more tokens to parse
 					free(token);
 					free(block);
-					ret = parse_it(rem+1, dest, *looking);
-					free(itable);
+					ret = (*looking).type?
+						parse_it(rem+1, dest, *looking):
+						-1;
+					free(*itable);
 					return ret;}
 				else{ //we are done!
 					*dest = *looking;
 					free(token);
 					free(block);
-					free(itable);
+					free(*itable);
 					return 0;}}
 		//token not found!
 		free(token);
 		free(block);
-		free(itable);
+		free(*itable);
 		return -1;}}
 		
 		

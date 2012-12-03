@@ -1,27 +1,48 @@
 #include "../warrior-sfs-lib.h"
 
-int sfs_readdir(int fd, char *mem_pointer){
-	int i;
-	folder_block* temp_f_blk;
-	char temp[128];
-
-	if(get_block(open_i_block[fd].block_index,temp)!=0) return -1;
-
-	temp_f_blk=(folder_block*)temp;
-	if(open_i_block[fd].type){
-		for (i=open_i_block[fd].file_ptr;i<NUM_CONTENT_IN_FOLDER;i++){
-		if (i==0) i++;
-
-		if(temp_f_blk->dest_list[i]>0){
-			strcpy(mem_pointer, temp_f_blk->name_list[i]);
-			printf("mem_pointer: %s\n",mem_pointer);
-			open_i_block[fd].file_ptr=i+1;
-			return 1;
-		}
-	}
-	if (i==NUM_CONTENT_IN_FOLDER)
+int sfs_readdir( int fd, char* buffer){
+	//get open file table
+	inode** oft;//open file table
+	char* oft_buffer = malloc(sizeof(char)*super.blockSize);
+	int ret = get_block(super.openFileTable_loc, oft_buffer);
+	if (ret < 0) {
+		free(oft_buffer);
+		return ret;}
+	int oft_size = read_itable( oft_buffer, oft, super.blockSize);
+	free(oft_buffer);
+	if (oft_size < 0)
 		return -1;
-	}else{
-		return 1;
-	}
-}
+	if ( fd < 0 || fd >= oft_size) {
+		free(*oft);
+		return -1;}
+	
+	//get the dir
+	inode* dir_meta = (*oft) + fd;
+	if( (*dir_meta).type != 1) {
+		free(*oft);
+		return -1;}
+	inode** dir;
+	char* dir_buffer = malloc(sizeof(char)*super.blockSize);
+	ret = get_block( (*dir_meta).index, dir_buffer);
+	if (ret < 0) {
+		free(*oft);
+		free(dir_buffer);
+		return ret;}
+	int dir_size = read_itable( dir_buffer, dir, super.blockSize);
+	if (dir_size < 0) {
+		free(*oft);
+		free(dir_buffer);
+		return ret;}
+		
+	//cleanup
+	free(*oft);
+	free(dir_buffer);
+	
+	//everything is okay, we can now read and print the directory
+	int i;
+	for( i = 0; i < dir_size; i++)
+		printf("%s\n",(*dir)[i].name);
+	
+	//done
+	free(*dir);
+	return 0;}

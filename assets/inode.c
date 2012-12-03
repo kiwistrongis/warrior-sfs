@@ -120,7 +120,7 @@ int read_itable(char* s, inode** t, int s_size){
 			int k;
 			for( k=0; k<t_i; k++)
 				free((*t)[k].name);
-			free(t);
+			free(*t);
 			return -1;}
 		if( t_size < t_i){
 			t_size = s_left/14 + 1;

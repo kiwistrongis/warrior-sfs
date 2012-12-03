@@ -1,5 +1,4 @@
 #!/bin/bash
-# Cleans non-source files out of directories.
 if [ $# -eq 1 ]; then
 	rm -f $1/*.class $1/*.o \
 		$1/*.so $1/*.a $1/*~ $1/*.out
