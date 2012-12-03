@@ -105,8 +105,13 @@ warrior-sfs-lib.a: \
 		assets/parsing.o \
 		assets/superblock.o \
 		assets/utility.o \
+		functions/close_file.o \
+		functions/delete_file.o \
 		functions/get_size.o \
-		functions/get_type.o
+		functions/get_type.o \
+		functions/initialize.o \
+		functions/open_file.o \
+		functions/read_dir.o
 	ranlib warrior-sfs-lib.a
 
 #assets

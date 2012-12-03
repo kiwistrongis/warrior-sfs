@@ -54,7 +54,8 @@ int parse_it(char* s, inode* dest, inode parent){
 					free(block);
 					free(*itable);
 					free(itable);
-					return 0;}}
+					return 0;}
+			looking+=sizeof(inode);}
 		//token not found!
 		free(token);
 		free(block);

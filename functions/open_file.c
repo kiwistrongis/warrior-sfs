@@ -14,12 +14,14 @@ int sfs_open(char *pathname){
 	char* oft_buffer = malloc(sizeof(char)*super.blockSize);
 	ret = get_block( super.openFileTable_loc, oft_buffer);
 	if (ret < 0) {
+		free(result);
 		free(oft_buffer);
 		return ret;} //super not initialized?
 	oft = malloc(sizeof(inode*));
 	int oft_size = read_itable( oft_buffer, oft, super.blockSize);
 	free(oft_buffer);
 	if (oft_size < 0) {
+		free(result);
 		free(oft);
 		return -1;} //read failed?
 	
@@ -27,12 +29,14 @@ int sfs_open(char *pathname){
 	oft_size++;
 	*oft = realloc( *oft, sizeof(inode) * ( oft_size + 1));
 	if( *oft == NULL) {
+		free(result);
 		free(oft);
 		return -1;} //ran out of memory
 	(*oft)[oft_size] = (*oft)[oft_size - 1];
 	(*oft)[oft_size - 1] = *result;
 	oft_buffer = calloc( super.blockSize, sizeof(char));
 	ret = write_itable( oft_buffer, *oft, super.blockSize);
+	free(result);
 	free(*oft);
 	free(oft);
 	if(ret < 0) {
