@@ -25,7 +25,7 @@ int main(){
 			scanf("%s",buffer);
 			scanf("%d",type);
 			scanf("%d",size);
-			ret = sfs_create( buffer, *type, (*type)?127:*size);
+			ret = sfs_create( buffer, *type, *size);
 			if( ret >= 0)
 				printf("Created\n",ret);
 			else

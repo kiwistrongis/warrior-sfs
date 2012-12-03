@@ -4,7 +4,7 @@ int sfs_create(char *pathname, int type, int size){
 	inode* file = malloc(sizeof(inode));
 	(*file).index = -1;
 	(*file).type = type;
-	(*file).size = size;
+	(*file).size = type?128:size;
 	(*file).name = NULL;
 	
 	//get the file's parent's meta
@@ -47,7 +47,7 @@ int sfs_create(char *pathname, int type, int size){
 	(*file).name = pathname + lastSlash + 1;
 	
 	//get block allocation
-	(*file).index = balloc(size % super.blockSize + 1);
+	(*file).index = balloc(type?1:( size % super.blockSize + 1));
 	
 	//add to parent
 	parent_size++;
