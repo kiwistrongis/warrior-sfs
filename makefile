@@ -60,11 +60,8 @@ test-all: test-minor test
 
 #in progress
 dead: \
-		functions/read_file.o \
-		functions/write_file.o \
 
 incomplete: \
-		functions/create_file.o \
 
 working: \
 		assets/blockio.o \
@@ -74,12 +71,15 @@ working: \
 		assets/superblock.o \
 		assets/utility.o \
 		functions/close_file.o \
+		functions/create_file.o \
 		functions/delete_file.o \
 		functions/get_size.o \
 		functions/get_type.o \
 		functions/initialize.o \
 		functions/open_file.o \
 		functions/read_dir.o \
+		functions/read_file.o \
+		functions/write_file.o \
 
 tested: \
 
@@ -97,7 +97,7 @@ warrior-sfs.o: warrior-sfs.c \
 warrior-sfs-lib.a: \
 		assets.h \
 		assets \
-		working
+		functions
 	ar rc warrior-sfs-lib.a \
 		assets/blockio.o \
 		assets/free_block_table.o \
@@ -106,12 +106,15 @@ warrior-sfs-lib.a: \
 		assets/superblock.o \
 		assets/utility.o \
 		functions/close_file.o \
+		functions/create_file.o \
 		functions/delete_file.o \
 		functions/get_size.o \
 		functions/get_type.o \
 		functions/initialize.o \
 		functions/open_file.o \
-		functions/read_dir.o
+		functions/read_dir.o \
+		functions/read_file.o \
+		functions/write_file.o
 	ranlib warrior-sfs-lib.a
 
 #assets

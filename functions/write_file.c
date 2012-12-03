@@ -1,53 +1,51 @@
 #include "../warrior-sfs-lib.h"
 
-int sfs_write(int fd, int start, int length, char *mem_pointer){
-    char temp_blk[128];
-    int length_to_write=length;
-    int working_blk=open_i_blcok[fd].block_index;
-    char *mem_ptr=mem_pointer;
-    int new_size=((data_blcok*)(open_i_blcok[fd].block_content))->file_size;
-    //open_i_blcok[fd].file_ptr=start;
-    if(open_i_blcok[fd].type) {
-        printf("Can't write to a folder file\n");
-        return -1;
-    }
-    if (start<0){
-        open_i_blcok[fd].file_ptr=new_size;
-        new_size=new_size+length;
-        ((data_blcok*)(open_i_blcok[fd].block_content))->file_size=new_size;
-    }else{
-        open_i_blcok[fd].file_ptr=start;
-        if((start+length)>new_size)
-            return -1;
-    }
-
-    while (open_i_blcok[fd].file_ptr>=120){
-        open_i_blcok[fd].file_ptr=open_i_blcok[fd].file_ptr%120;
-        if(get_block(((data_blcok*)(open_i_blcok[fd].block_content))->next_block_num, open_i_blcok[fd].block_content)!=0) return -1;
-    }
-    while(length_to_write){
-        if(open_i_blcok[fd].file_ptr==120){
-            if(put_block(working_blk, open_i_blcok[fd].block_content)!=0) return -1;
-            open_i_blcok[fd].file_ptr=0;
-            if (((data_blcok*)(open_i_blcok[fd].block_content))->next_block_num<=0){
-                ((data_blcok*)(open_i_blcok[fd].block_content))->next_block_num=find_first_empty_block();
-                ((data_blcok*)temp_blk)->next_block_num=0;
-                ((data_blcok*)temp_blk)->type=0;
-                ((data_blcok*)temp_blk)->valid=1;
-                put_block(((data_blcok*)(open_i_blcok[fd].block_content))->next_block_num, temp_blk);
-            }else{
-                working_blk=((data_blcok*)(open_i_blcok[fd].block_content))->next_block_num;
-            }
-           
-            if(get_block(((data_blcok*)(open_i_blcok[fd].block_content))->next_block_num, open_i_blcok[fd].block_content)!=0) return -1;
-        }
-        ((data_blcok*)(open_i_blcok[fd].block_content))->content[open_i_blcok[fd].file_ptr]=*mem_ptr;
-       
-        putchar(((data_blcok*)(open_i_blcok[fd].block_content))->content[open_i_blcok[fd].file_ptr]);
-        open_i_blcok[fd].file_ptr++;
-        mem_ptr++;
-        length_to_write--;
-    }
-    if(put_block(working_blk, open_i_blcok[fd].block_content)!=0) return -1;
-	return 1;
-}
+int sfs_write(int fd, int start, int length, char *buffer){
+	int blockOffset = start % super.blockSize;
+	if(blockOffset + length > super.blockSize)
+		return -1;
+	//get open file table
+	inode** oft; //open file table
+	char* oft_buffer = malloc(sizeof(char)*super.blockSize);
+	int ret = get_block( super.openFileTable_loc, oft_buffer);
+	if (ret < 0) {
+		free(oft_buffer);
+		return ret;} //super not initialized?
+	oft = malloc(sizeof(inode*));
+	int oft_size = read_itable( oft_buffer, oft, super.blockSize);
+	free(oft_buffer);
+	if (oft_size < 0) {
+		free(oft);
+		return -1;} //read failed?
+	if ( fd < 0 || fd >= oft_size) {//verify fd range
+		free(*oft);
+		free(oft);
+		return -1;}
+	if( (*oft)[fd].type == 1){ //cant write dir like file
+		free(*oft);
+		free(oft);
+		return -1;}
+	if( (*oft)[fd].size < start + length){ //file is not that big
+		free(*oft);
+		free(oft);
+		return -1;}
+		
+	//everything's good, we can can write the fd'th element
+	char* block = malloc(sizeof(char)*super.blockSize);
+	ret = get_block( (*oft)[fd].index + blockOffset, block);
+	if( ret < 0){
+		free(*oft);
+		free(oft);
+		free(block);
+		return ret;}
+	int i;
+	for(i = 0; i < length; i++)
+		block[start + i] = buffer[i];
+	ret = put_block( (*oft)[fd].index + blockOffset, block);
+	free(*oft);
+	free(oft);
+	free(block);
+	if( ret < 0) return ret;
+	
+	//done
+	return 0;}

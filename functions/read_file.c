@@ -1,37 +1,48 @@
 #include "../warrior-sfs-lib.h"
 
-int sfs_read(int fd, int start, int length, char *mem_pointer){
-	int length_to_read=length;
-    char *mem_ptr=mem_pointer;
-    data_blcok * data_blcok_tmp;
-    int next_blk;
-    open_i_blcok[fd].file_ptr=start;
-    if(open_i_blcok[fd].type) {
-        printf("Can't read from a file folder :P\n");
-        return -1;
-    }
-
-    while (open_i_blcok[fd].file_ptr>=120){
-        open_i_blcok[fd].file_ptr=open_i_blcok[fd].file_ptr%120;
-        next_blk=((data_blcok*)(open_i_blcok[fd].block_content))->next_block_num;
-        if(get_block(next_blk, open_i_blcok[fd].block_content)!=0) return -1;
-    }
-    printf("open_i_blcok[fd].block_index: %d\n", open_i_blcok[fd].block_index);
-    while (length_to_read){
-
-        if(get_block(open_i_blcok[fd].block_index, open_i_blcok[fd].block_content)!=0) return -1;
-        if(open_i_blcok[fd].file_ptr==120){
-            //Current Block has been finished for reading
-            //Going to the next one
-            open_i_blcok[fd].file_ptr=0;
-            if (((data_blcok*)(open_i_blcok[fd].block_content))->next_block_num<=0) return -1;
-            if(get_block(((data_blcok*)(open_i_blcok[fd].block_content))->next_block_num, open_i_blcok[fd].block_content)!=0) return -1;
-        }
-        data_blcok_tmp=(data_blcok*)(open_i_blcok[fd].block_content);
-        *mem_ptr=((data_blcok*)(open_i_blcok[fd].block_content))->content[open_i_blcok[fd].file_ptr];
-        open_i_blcok[fd].file_ptr++;
-        //putchar(*mem_ptr);
-        mem_ptr++;
-        length_to_read--;
-    }
-	return 1;}
+int sfs_read(int fd, int start, int length, char *buffer){
+	int blockOffset = start % super.blockSize;
+	if(blockOffset + length > super.blockSize)
+		return -1;
+	//get open file table
+	inode** oft; //open file table
+	char* oft_buffer = malloc(sizeof(char)*super.blockSize);
+	int ret = get_block( super.openFileTable_loc, oft_buffer);
+	if (ret < 0) {
+		free(oft_buffer);
+		return ret;} //super not initialized?
+	oft = malloc(sizeof(inode*));
+	int oft_size = read_itable( oft_buffer, oft, super.blockSize);
+	free(oft_buffer);
+	if (oft_size < 0) {
+		free(oft);
+		return -1;} //read failed?
+	if ( fd < 0 || fd >= oft_size) {//verify fd range
+		free(*oft);
+		free(oft);
+		return -1;}
+	if( (*oft)[fd].type == 1){ //cant read dir like file
+		free(*oft);
+		free(oft);
+		return -1;}
+	if( (*oft)[fd].size < start + length){ //file is not that big
+		free(*oft);
+		free(oft);
+		return -1;}
+		
+	//everything's good, we can can read the fd'th element
+	char* block = malloc(sizeof(char)*super.blockSize);
+	ret = get_block( (*oft)[fd].index + blockOffset, block);
+	free(*oft);
+	free(oft);
+	if( ret < 0){
+		free(block);
+		return ret;}
+	int i;
+	for(i = 0; i < length; i++)
+		buffer[i] = block[start + i];
+	free(block);
+	buffer[length] = '\0';
+	
+	//done
+	return 0;}
