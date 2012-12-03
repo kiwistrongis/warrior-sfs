@@ -40,7 +40,7 @@ functions: \
 		functions/read_dir.o \
 		functions/read_file.o \
 		functions/write_file.o
-tests-major: tests/sfstest.out
+tests-major: warrior-sfs
 tests-minor: \
 		tests/intest.out \
 		tests/ittest.out \
@@ -52,7 +52,7 @@ experiments: \
 clean-extras:
 	rm -f warrior-sfs
 test: tests-major
-	tests/sfstest.out
+	./warrior-sfs
 test-minor: tests-minor
 	tests/intest.out
 	tests/ittest.out

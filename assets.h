@@ -9,4 +9,5 @@
 #include "assets/open_file_table.h"
 #include "assets/superblock.h"
 #include "assets/utility.h"
-
+//Definitions
+#define DEBUG 1

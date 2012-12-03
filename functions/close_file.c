@@ -11,18 +11,21 @@ int sfs_close(int fd){
 	inode** oft; //open file table
 	char* oft_buffer = malloc(sizeof(char)*super.blockSize);
 	int ret = get_block( super.openFileTable_loc, oft_buffer);
+	if(DEBUG) printf("%d\n",1);
 	if (ret < 0) {
 		free(oft);
 		free(oft_buffer);
 		return ret;} //super not initialized?
 	oft = malloc(sizeof(inode*));
 	int oft_size = read_itable( oft_buffer, oft, super.blockSize);
+	if(DEBUG) printf("%d\n",2);
 	free(oft_buffer);
 	if (oft_size < 0) return -1; //read failed?
 	if ( fd < 0 || fd >= oft_size) {//verify fd range
 		free(*oft);
 		free(oft);
 		return -1;}
+	if(DEBUG) printf("%d\n",3);
 	
 	//everything's good, we can can remove the fd'th element
 	//note: this implementation decrements all other open files' fds \
@@ -32,13 +35,17 @@ int sfs_close(int fd){
 		(*oft)[i] = (*oft)[i + 1];
 	oft_buffer = malloc(sizeof(char)*super.blockSize);
 	ret = write_itable( oft_buffer, *oft, super.blockSize);
+	if(DEBUG) printf("%d\n",4);
 	free(*oft);
 	free(oft);
+	if(DEBUG) printf("%d\n",5);
 	if ( ret < 0){ //maybe itable was corrupted?
 		free(oft_buffer);
 		return ret;}
 	ret = put_block( super.openFileTable_loc, oft_buffer);
+	if(DEBUG) printf("%d\n",6);
 	free(oft_buffer);
+	if(DEBUG) printf("%d\n",7);
 	if( ret < 0) return ret; //write failed?
 	
 	//done
