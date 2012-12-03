@@ -1,4 +1,4 @@
-#include "superblock.h"
+#include "../assets.h"
 /**
  *int init_superblock	initializes superblock 
  *int put_superblock	writes the superblock to the disk
@@ -61,7 +61,7 @@ int get_superblock() {
 	char* buffer = malloc(128 * sizeof(char));
 	int i= 0;
 	//get superblock
-	int ret = put_block( super.super_loc, buffer);
+	int ret = get_block( 0, buffer);
 	if(ret<0){
 		free( buffer);
 		return ret;}

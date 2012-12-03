@@ -1,8 +1,3 @@
-#include "../assets.h"
-#include "blockio.h"
-#include "inode.h"
-#include <string.h>
-
 typedef struct {
 	int blockSize;//in bytes
 	int blockCount;//number of blocks on disk

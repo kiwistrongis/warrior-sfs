@@ -1,7 +1,5 @@
 #include "../assets.h"
-#include "../assets/superblock.h"
-#include <stdio.h>
-main(){
+int main(){
 	
 	int ret;
 	ret = get_superblock();
@@ -35,4 +33,5 @@ main(){
 	int b;
 	get_bytes(s+2,(int*)&b);
 	printf("%d\n",b);*/
+	return 0;
 }

@@ -1,3 +1,5 @@
+#include "../assets.h"
+
 /*inode reads and writes inodes and itables
 *
 *char* write_inode	converts inodes into cstrings
@@ -5,8 +7,6 @@
 *int write_itable		...
 *int read_itable		...
 */
-#include "inode.h"
-
 
 int size_in_blocks(inode i){
 	return i.size/128 + 1;}
@@ -45,13 +45,19 @@ inode read_inode(char* s){//reliably converts cstrings into inodes
 	ret = get_bytes(s + 0, (int*)&(i.index));
 	ret = get_bytes(s + 2, (int*)&(i.size));
 	ret = get_bytes(s + 4, (int*)&(i.type));
+	if(DEBUG) printf("%d\n",101);
 	int name_length;
 	get_bytes(s + 6, (int*)&(name_length));
+	if(DEBUG) printf("%d\n",102);
+	if(DEBUG) printf("%d\n",i.name);
 	i.name = malloc((name_length + 1) * sizeof(char));
+	if(DEBUG) printf("%d\n",name_length);
+	if(DEBUG) printf("%d\n",i.name);
+	if(DEBUG) printf("%d\n",103);
 	int j;
 	for(j = 0; j<name_length; j++)
 		i.name[j] = s[8+j];
-	*(i.name+j) = '\0';
+	*(i.name+name_length) = '\0';
 	return i;}
 
 /**
@@ -67,6 +73,8 @@ inode read_inode(char* s){//reliably converts cstrings into inodes
 *int write_itable function determines whether there is sufficient room then converts inode into string using write_inode function. Increases result index then frees up memory of buffer.
 **/
 int write_itable(char* result, inode* t, int result_size_alloc){
+	if(DEBUG) printf("%d\n",91);
+	if(DEBUG) printf("%d\n",t[0].index);
 	int r_i = 0; //index in result
 	int space_left; //space left in result
 	int t_i = 0; //index in inode table
@@ -74,14 +82,18 @@ int write_itable(char* result, inode* t, int result_size_alloc){
 	int ib_i;//index in inode buffer
 	int ib_size; //size of i_buffer
 	do{
+		if(DEBUG) printf("%d\n",92);
+		if(DEBUG) printf("%d\n",t[t_i].index);
 		ib_size = 8 + strlen(t[t_i].name);
 		i_buffer = write_inode( t[t_i++]);
 		space_left = (result_size_alloc - r_i) - 1;
 		if( space_left < ib_size){ //we have run out of space
+			if(DEBUG) printf("%d\n",93);
 			free(result);
 			free(i_buffer);
 			return -1;}
 		//we have enough space
+		if(DEBUG) printf("%d\n",94);
 		for(ib_i = 0; ib_i < ib_size; ib_i++)
 			result[r_i++] = i_buffer[ib_i];
 		free(i_buffer);}
@@ -89,6 +101,7 @@ int write_itable(char* result, inode* t, int result_size_alloc){
 		terminator inode has null name, \
 		therefore ib_size = 8 + name length = 8
 	*(result + r_i) = '\0';
+	if(DEBUG) printf("%d\n",95);
 	return r_i;}
 	
 /**
@@ -106,31 +119,34 @@ int write_itable(char* result, inode* t, int result_size_alloc){
 * alternatively
 **/
 int read_itable(char* s, inode** t, int s_size){
+	if(DEBUG) printf("%d\n",96);
 	//int s_size = strlen(s);
 	int s_i = 0;
 	int s_left;
 	int t_size = s_size/14 + 1;
-	*t = realloc(*t, sizeof(inode) * t_size);
+	*t = malloc(sizeof(inode) * t_size);
 	int t_i = 0;
-	printf("%d\n",t);
+	if(DEBUG) printf("%d\n",97);
 	while((s_left = s_size - s_i) > 8){ //we can read name length from s
 		int new_name_length;
 		get_bytes(s + s_i + 6, (int*) &new_name_length);
 		int new_size = new_name_length + 8;
-		printf("%d %d\n", s_i, new_size);
 		if(s_left < new_size){ //s is incorrectly formatted
 			int k;
 			for( k=0; k<t_i; k++)
 				free((*t)[k].name);
-			free(t);
+			free(*t);
 			return -1;}
+		if(DEBUG) printf("%d\n",98);
 		if( t_size < t_i){
 			t_size = s_left/14 + 1;
 			*t = realloc(*t, sizeof(inode) * t_size);}
+		if(DEBUG) printf("%d\n",99);
 		(*t)[t_i++] = read_inode(s + s_i);
 		s_i += new_size;
-		printf("%d %d\n", s_i, new_size);
+		if(DEBUG) printf("%d\n",100);
 		if(new_name_length <= 0){ //we have reached the terminator inode
 			*t = realloc( *t, sizeof(inode) * t_i);
+			if(DEBUG) printf("%d\n",t_i);
 			return t_i - 1;}}}
 

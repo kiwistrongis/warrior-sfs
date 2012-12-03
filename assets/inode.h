@@ -1,7 +1,3 @@
-#include "blockio.h"
-#include "../assets.h"
-#include <string.h>
-
 #define index_pos 0
 #define size_pos 1
 #define type_pos 2
