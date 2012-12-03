@@ -8,7 +8,7 @@ int parse(char* s, inode* dest){
 		return -1;
 	else if ( length ==1)
 		if(s[0]=='/'){
-			dest = (inode*)&(super.root);
+			*dest = super.root;
 			return 0;}
 		else
 			return -1;

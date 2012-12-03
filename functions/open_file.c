@@ -7,6 +7,7 @@ int sfs_open(char *pathname){
 	//get file
 	inode* result = malloc(sizeof(inode));
 	int ret = parse(pathname, result);
+	if(DEBUG) printf("%s\n",(*result).name);
 	if ( ret < 0) { //file does not exist
 		free(result);
 		return ret;}
@@ -16,15 +17,17 @@ int sfs_open(char *pathname){
 	inode** oft; //open file table
 	char* oft_buffer = malloc(sizeof(char)*super.blockSize);
 	ret = get_block( super.openFileTable_loc, oft_buffer);
-	if(DEBUG) printf("%d\n",30);
 	if (ret < 0) {
 		free(result);
 		free(oft_buffer);
 		return ret;} //super not initialized?
 	oft = malloc(sizeof(inode*));
+	if(DEBUG) printf("%d\n",30);
 	int oft_size = read_itable( oft_buffer, oft, super.blockSize);
+	if(DEBUG) printf("%d\n",super.openFileTable_loc);
 	if(DEBUG) printf("%d\n",31);
 	free(oft_buffer);
+	if(DEBUG) printf("%d\n",(*result).index);
 	if (oft_size < 0) {
 		free(result);
 		free(oft);
@@ -33,14 +36,18 @@ int sfs_open(char *pathname){
 	//add file to oft
 	oft_size++;
 	if(DEBUG) printf("%d\n",32);
+	if(DEBUG) printf("%d\n",(*result).index);
 	*oft = realloc( *oft, sizeof(inode) * ( oft_size + 1));
-	if(DEBUG) printf("%d\n",33);
 	if( *oft == NULL) {
 		free(result);
 		free(oft);
 		return -1;} //ran out of memory
 	(*oft)[oft_size] = (*oft)[oft_size - 1];
+	if(DEBUG) printf("%d\n",(*oft)[0].index);
 	(*oft)[oft_size - 1] = *result;
+	if(DEBUG) printf("%d\n",(*result).index);
+	if(DEBUG) printf("%d\n",(*oft)[0].index);
+	if(DEBUG) printf("%d\n",33);
 	oft_buffer = calloc( super.blockSize, sizeof(char));
 	ret = write_itable( oft_buffer, *oft, super.blockSize);
 	if(DEBUG) printf("%d\n",34);
