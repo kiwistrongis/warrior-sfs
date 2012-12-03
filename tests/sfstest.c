@@ -1,4 +1,4 @@
-#include "../assets.h"
+#include "../warrior-sfs-lib.h"
 
 /* This is the maximum number of bytes that can be read from or written to a file with a single file system call using this program.  Since files are limited to 512 bytes length, this should be sufficient. */
 /* the format definition is necessary because macro substitutions do not take place within quoted strings */
@@ -27,7 +27,7 @@ int p1,p2,p3;
 /**
  * main test routine
  */
-main(){
+int main(){
 	int i;
 	int retval;  /* used to hold return values of file system calls */
 	command_buffer = malloc (sizeof(char)*(MAX_INPUT_LENGTH+1));
@@ -81,7 +81,7 @@ main(){
 			printf("Enter number of bytes to read: ");
 			scanf("%d",&p3);
 			retval = sfs_read(p1,p2,p3,io_buffer);
-			if (retval > 0) {
+			if (retval >= 0) {
 				printf("Read succeeded.\n");
 				printf("The following data was read (only printable ASCII will display)\n");
 				for(i=0;i<p3;i++)
@@ -103,7 +103,7 @@ main(){
 			printf("Enter %d characters to be written: ",p3);
 			scanf(IO_BUF_FORMAT,io_buffer);
 			retval = sfs_write(p1,p2,p3,io_buffer);
-			if (retval > 0) {
+			if (retval >= 0) {
 				printf("Write succeeded.\n");
 				printf("Wrote %s to the disk\n",io_buffer);}
 			else
@@ -114,7 +114,7 @@ main(){
 			printf("Enter file descriptor number: ");
 			scanf("%d",&p1);
 			retval = sfs_readdir(p1,io_buffer);
-			if (retval > 0) {
+			if (retval >= 0) {
 				printf("sfs_readdir succeeded.\n");
 				printf("Directory entry is: %s\n",io_buffer);}
 			else if (retval == 0) {
@@ -128,7 +128,7 @@ main(){
 			printf("Enter file descriptor number: ");
 			scanf("%d",&p1);
 			retval = sfs_close(p1);
-			if (retval > 0)
+			if (retval >= 0)
 				printf("sfs_close succeeded.\n");
 			else
 				printf("Error.  Return value was %d\n",retval);
@@ -139,8 +139,10 @@ main(){
 			scanf(INPUT_BUF_FORMAT,data_buffer_1);
 			printf("Enter 0 for regular file, 1 for directory: ");
 			scanf("%d",&p1);
-			retval = sfs_create(data_buffer_1,p1);
-			if (retval > 0)
+			printf("Enter the size of the file to create");
+			scanf("%d",&p2);
+			retval = sfs_create(data_buffer_1,p1,p2);
+			if (retval >= 0)
 				printf("sfs_create succeeded.\n");
 			else
 				printf("Error.  Return value was %d\n",retval);
@@ -150,7 +152,7 @@ main(){
 			printf("Enter full path name of file to delete: ");
 			scanf(INPUT_BUF_FORMAT,data_buffer_1);
 			retval = sfs_delete(data_buffer_1);
-			if (retval > 0)
+			if (retval >= 0)
 				printf("sfs_delete succeeded.\n");
 			else
 				printf("Error.  Return value was %d\n",retval);
@@ -187,7 +189,7 @@ main(){
 			printf("Enter 1 to erase disk while initializing, 0 otherwise: ");
 			scanf("%d",&p1);
 			retval = sfs_initialize(p1);
-			if (retval > 0)
+			if (retval >= 0)
 				printf("sfs_initialize succeeded.\n");
 			else
 				printf("Error.  Return value was %d\n",retval);

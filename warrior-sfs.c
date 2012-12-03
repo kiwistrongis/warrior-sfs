@@ -1,5 +1,4 @@
-#include "assets.h"
+#include "warrior-sfs-lib.h"
 
-int main(){
-	
+int main(){	
 	return 0;}

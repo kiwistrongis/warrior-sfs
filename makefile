@@ -44,7 +44,8 @@ tests-major: tests/sfstest.out
 tests-minor: \
 		tests/intest.out \
 		tests/ittest.out \
-		tests/sbtest.out
+		tests/sbtest.out \
+		tests/scantest.out
 experiments: \
 		tests/casting.out\
 		tests/shift.out
@@ -56,32 +57,8 @@ test-minor: tests-minor
 	tests/intest.out
 	tests/ittest.out
 	tests/sbtest.out
+	tests/scantest.out
 test-all: test-minor test
-
-#in progress
-dead: \
-
-incomplete: \
-
-working: \
-		assets/blockio.o \
-		assets/free_block_table.o \
-		assets/inode.o \
-		assets/parsing.o \
-		assets/superblock.o \
-		assets/utility.o \
-		functions/close_file.o \
-		functions/create_file.o \
-		functions/delete_file.o \
-		functions/get_size.o \
-		functions/get_type.o \
-		functions/initialize.o \
-		functions/open_file.o \
-		functions/read_dir.o \
-		functions/read_file.o \
-		functions/write_file.o \
-
-tested: \
 
 #locals
 warrior-sfs: warrior-sfs.o \
@@ -91,11 +68,11 @@ warrior-sfs: warrior-sfs.o \
 		warrior-sfs.o
 
 warrior-sfs.o: warrior-sfs.c \
-		assets.h
+		warrior-sfs-lib.h
 	gcc -c -g warrior-sfs.c -o warrior-sfs.o
 
 warrior-sfs-lib.a: \
-		assets.h \
+		warrior-sfs-lib.h \
 		assets \
 		functions
 	ar rc warrior-sfs-lib.a \
@@ -116,6 +93,15 @@ warrior-sfs-lib.a: \
 		functions/read_file.o \
 		functions/write_file.o
 	ranlib warrior-sfs-lib.a
+
+warrior-sfs-lib.h: assets.h
+assets.h: \
+	assets/blockio.h \
+	assets/free_block_table.h \
+	assets/open_file_table.h \
+	assets/parsing.h \
+	assets/superblock.h \
+	assets/utility.h
 
 #assets
 assets/blockio.o: assets/blockio.h assets/blockio.c \
@@ -152,72 +138,54 @@ assets/superblock.o: assets/superblock.c assets/superblock.h \
 
 #functions
 functions/close_file.o: functions/close_file.c \
-		assets.h
+		warrior-sfs-lib.h
 	gcc -c -g functions/close_file.c -o functions/close_file.o
 	
 functions/create_file.o: functions/create_file.c \
-		assets.h
+		warrior-sfs-lib.h
 	gcc -c -g functions/create_file.c -o functions/create_file.o
 	
 functions/delete_file.o: functions/delete_file.c \
-		assets.h
+		warrior-sfs-lib.h
 	gcc -c -g functions/delete_file.c -o functions/delete_file.o
 	
 functions/get_size.o: functions/get_size.c \
-		assets/inode.h \
-		assets.h
+		warrior-sfs-lib.h
 	gcc -c -g functions/get_size.c -o functions/get_size.o
 	
 functions/get_type.o: functions/get_type.c \
-		assets/inode.h \
-		assets.h
+		warrior-sfs-lib.h
 	gcc -c -g functions/get_type.c -o functions/get_type.o
 	
 functions/initialize.o: functions/initialize.c \
-		assets.h
+		warrior-sfs-lib.h
 	gcc -c -g functions/initialize.c -o functions/initialize.o
 	
 functions/open_file.o: functions/open_file.c \
-		assets/inode.h \
-		assets.h
+		warrior-sfs-lib.h
 	gcc -c -g functions/open_file.c -o functions/open_file.o
 	
 functions/read_dir.o: functions/read_dir.c \
-		assets.h
+		warrior-sfs-lib.h
 	gcc -c -g functions/read_dir.c -o functions/read_dir.o
 	
 functions/read_file.o: functions/read_file.c \
-		assets.h
+		warrior-sfs-lib.h
 	gcc -c -g functions/read_file.c -o functions/read_file.o
 	
 functions/write_file.o: functions/write_file.c \
-		assets.h
+		warrior-sfs-lib.h
 	gcc -c -g functions/write_file.c -o functions/write_file.o
 
 #major tests
 tests/sfstest.o: tests/sfstest.c \
-		assets.h
+		warrior-sfs-lib.h
 	gcc -c -g tests/sfstest.c -o tests/sfstest.o
 
 tests/sfstest.out: tests/sfstest.o \
-		assets.h \
-		assets
+		warrior-sfs-lib.a
 	gcc -o tests/sfstest.out tests/sfstest.o \
-		assets/blockio.o \
-		functions/close_file.o \
-		functions/create_file.o \
-		functions/delete_file.o \
-		assets/free_block_table.o \
-		functions/get_size.o \
-		functions/get_type.o \
-		assets/utility.o \
-		functions/initialize.o \
-		assets/inode.o \
-		functions/open_file.o \
-		functions/read_dir.o \
-		functions/read_file.o \
-		assets/superblock.o \
-		functions/write_file.o
+		warrior-sfs-lib.a
 
 #minor tests
 tests/casting.out: tests/casting.c
@@ -266,32 +234,43 @@ tests/sbtest.out: tests/sbtest.o \
 		assets/inode.o \
 		assets/superblock.o
 
+tests/scantest.out: tests/scantest.c
+	gcc -o tests/scantest.out tests/scantest.c
+
 #codefiles
-codefiles: codefiles-assets codefiles-locals codefiles-tests
+codefiles: \
+		codefiles-assets \
+		codefiles-functions \
+		codefiles-locals \
+		codefiles-tests
 
 codefiles-assets: \
 		assets/blockio.c \
 		assets/blockio.h \
+		assets/free_block_table.c \
+		assets/free_block_table.h \
+		assets/utility.c \
+		assets/inode.c \
+		assets/inode.h \
+		assets/superblock.c \
+		assets/superblock.h \
+
+codefiles-functions: \
 		functions/close_file.c \
 		functions/create_file.c \
 		functions/delete_file.c \
-		assets/free_block_table.c \
-		assets/free_block_table.h \
 		functions/get_size.c \
 		functions/get_type.c \
-		assets/utility.c \
 		functions/initialize.c \
-		assets/inode.c \
-		assets/inode.h \
 		functions/open_file.c \
 		functions/read_dir.c \
 		functions/read_file.c \
-		assets/superblock.c \
-		assets/superblock.h \
 		functions/write_file.c
 
 codefiles-locals: \
-		assets.h
+		assets.h \
+		warrior-sfs.c \
+		warrior-sfs-lib.h
 
 codefiles-tests: \
 		tests/casting.c \

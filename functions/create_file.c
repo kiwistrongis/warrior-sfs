@@ -47,7 +47,7 @@ int sfs_create(char *pathname, int type, int size){
 	(*file).name = pathname + lastSlash + 1;
 	
 	//get block allocation
-	(*file).index = balloc(size);
+	(*file).index = balloc(size % super.blockSize + 1);
 	
 	//add to parent
 	parent_size++;

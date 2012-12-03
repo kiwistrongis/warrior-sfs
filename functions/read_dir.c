@@ -47,8 +47,12 @@ int sfs_readdir( int fd, char* buffer){
 	
 	//everything is okay, we can now read and print the directory
 	int i;
-	for( i = 0; i < dir_size; i++)
-		printf("%s\n",(*dir)[i].name);
+	int j = 0;//index in buffer
+	for( i = 0; i < dir_size; i++){
+		int name_length = strlen( (*dir)[i].name);
+		strncpy( buffer + j, (*dir)[i].name, name_length);
+		strncpy( buffer + j + 1, "\n", 1);
+		j += name_length + 1;}
 	
 	//done
 	free(*dir);
