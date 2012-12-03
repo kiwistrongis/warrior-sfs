@@ -64,8 +64,8 @@ test-all: test-minor test
 warrior-sfs: warrior-sfs.o \
 		warrior-sfs-lib.a
 	gcc -o warrior-sfs \
-		warrior-sfs-lib.a \
-		warrior-sfs.o
+		warrior-sfs.o \
+		warrior-sfs-lib.a
 
 warrior-sfs.o: warrior-sfs.c \
 		warrior-sfs-lib.h
