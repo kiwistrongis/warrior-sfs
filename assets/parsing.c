@@ -34,6 +34,7 @@ int parse_it(char* s, inode* dest, inode parent){
 			free(block);
 			return ret;}
 		inode** itable;
+		itable = malloc(sizeof(inode*));
 		ret = read_itable( block, itable,128);
 		inode* looking = *itable;
 		while (strlen((*looking).name)>0){
@@ -45,17 +46,20 @@ int parse_it(char* s, inode* dest, inode parent){
 						parse_it(rem+1, dest, *looking):
 						-1;
 					free(*itable);
+					free(itable);
 					return ret;}
 				else{ //we are done!
 					*dest = *looking;
 					free(token);
 					free(block);
 					free(*itable);
+					free(itable);
 					return 0;}}
 		//token not found!
 		free(token);
 		free(block);
 		free(*itable);
+		free(itable);
 		return -1;}}
 		
 		

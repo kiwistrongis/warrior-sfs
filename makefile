@@ -6,7 +6,7 @@ clean: tools/cleandir \
 	tools/cleandir assets
 	tools/cleandir functions
 	tools/cleandir tests
-	tools/cleandir tool
+	tools/cleandir tools
 	rm -f -r documentation
 check: all clean
 freshen: clean all
@@ -60,13 +60,11 @@ test-all: test-minor test
 
 #in progress
 dead: \
-		functions/create_file.o \
 		functions/read_file.o \
 		functions/write_file.o \
 
 incomplete: \
-		functions/close_file.o \
-		functions/delete_file.o \
+		functions/create_file.o \
 
 working: \
 		assets/blockio.o \
@@ -75,11 +73,15 @@ working: \
 		assets/parsing.o \
 		assets/superblock.o \
 		assets/utility.o \
+		functions/close_file.o \
+		functions/delete_file.o \
 		functions/get_size.o \
 		functions/get_type.o \
 		functions/initialize.o \
 		functions/open_file.o \
 		functions/read_dir.o \
+
+tested: \
 
 #locals
 warrior-sfs: warrior-sfs.o \

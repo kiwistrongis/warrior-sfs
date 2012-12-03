@@ -5,7 +5,7 @@
 
 int sfs_open(char *pathname){
 	//get file
-	inode* result;
+	inode* result = malloc(sizeof(inode));
 	int ret = parse(pathname, result);
 	if ( ret < 0) return ret; //file does not exist
 	
@@ -16,20 +16,27 @@ int sfs_open(char *pathname){
 	if (ret < 0) {
 		free(oft_buffer);
 		return ret;} //super not initialized?
+	oft = malloc(sizeof(inode*));
 	int oft_size = read_itable( oft_buffer, oft, super.blockSize);
 	free(oft_buffer);
-	if (oft_size < 0) return -1; //read failed?
+	if (oft_size < 0) {
+		free(oft);
+		return -1;} //read failed?
 	
 	//add file to oft
 	oft_size++;
 	*oft = realloc( *oft, sizeof(inode) * ( oft_size + 1));
-	if( oft == NULL) return -1; //ran out of memory
+	if( *oft == NULL) {
+		free(oft);
+		return -1;} //ran out of memory
 	(*oft)[oft_size] = (*oft)[oft_size - 1];
 	(*oft)[oft_size - 1] = *result;
 	oft_buffer = calloc( super.blockSize, sizeof(char));
 	ret = write_itable( oft_buffer, *oft, super.blockSize);
 	free(*oft);
-	if(ret < 0) return ret; //there wasn't enough space
+	free(oft);
+	if(ret < 0) {
+		return ret;} //there wasn't enough space
 	
 	//put new open file table
 	ret = put_block( super.openFileTable_loc, oft_buffer);
